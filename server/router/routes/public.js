@@ -4,7 +4,7 @@
   var router = require('express').Router();
   var UsersController = require('../../controllers/users');
 
-  /* GET home page. */
+  // Return the home page (GET localhost:8080/)
   router.get('/', function(req, res) {
     res.json({
       success: true,
@@ -12,11 +12,11 @@
     });
   });
 
-  // e.g. POST localhost:8080/users/login
-  router.post('/users/login', UsersController.login);
+  // Create a user (POST localhost:8080/users)
+  router.post('/users', UsersController.create);
 
-  // e.g. POST localhost:8080/users
-  router.post('/users', UsersController.addUser);
+  // Log in a user (POST localhost:8080/users/login)
+  router.post('/users/login', UsersController.login);
 
   module.exports = router;
 })();

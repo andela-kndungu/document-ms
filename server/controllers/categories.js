@@ -5,122 +5,141 @@
   var parseError = require('./parseError');
 
   module.exports = {
-    getAll: function(req, res) {
-      // Get all entries in the roles "table"
-      Categories.find({}, function(error, categories) {
-        //  Inform user if anything goes wrong
-        if (error) {
-          res.status(500);
-          res.send('There was an error reading from the database');
-        } else {
-          // Else all's good, send results
-          res.json(categories);
-        }
-      });
-    },
-    addCategory: function(req, res) {
-      // Declare new instance of the Role "table"
+    // Add a new category
+    create: function(req, res) {
+      // Declare new instance of the Categories model
       var category = new Categories();
 
-      // Define values of the new "row" to add
+      // Define values of the new object to add
       category.title = req.body.title;
 
+      // Save the new category parsing the error if request is invalid
       category.save(function(error) {
         if (error) {
-          parseError(res, error);
-        } else {
-          // Return send success message
-          res.json({
-            success: true,
-            message: 'Category created successfully',
-            entry: category
-          });
+          return parseError(res, error);
         }
+        // Category created, return success message
+        return res.json({
+          success: true,
+          message: 'Category created successfully',
+          entry: category
+        });
       });
     },
-    getCategory: function(req, res) {
-      // Get the category based on provided id
-      Categories.findById(req.params.id, function(error, category) {
-        if (error) {
-          res.status(500).json({
-            success: false,
-            message: 'There was an error reading from the database'
-          });
-        } else {
+
+    // Handle all get requests for categories
+    find: {
+      // Retrieve by ID
+      id: function(req, res) {
+        Categories.findById(req.params.id, function(error, category) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
+              success: false,
+              message: 'There was an error reading from the database'
+            });
+          }
+          // Success, return retrieved category with success message
           if (category) {
-            res.json({
+            return res.json({
               success: true,
               message: 'Category retrieved',
               entry: category
             });
-          } else {
-            res.json({
-              success: false,
-              message: 'Category does not exist',
-            });
           }
-        }
-      });
-    },
-    updateCategory: function(req, res) {
-      // Get the category based on provided id
-      Categories.findById(req.params.id, function(error, category) {
-        if (error) {
-          res.status(500).json({
+          // Failed, no document with specified ID
+          return res.json({
             success: false,
-            message: 'There was an error reading from the database'
+            message: 'Category does not exist',
           });
-        } else {
-          if (category) {
-            Object.keys(req.body).forEach(function(property) {
-              category[property] = req.body[property];
-            });
-            // Save the updated category
-            category.save(function(error) {
-              // If error occured inform user
-              if (error) {
-                parseError(res, error);
-              } else {
-                // Return successfully updated category
-                res.json({
-                  success: true,
-                  message: 'Category updated successfully',
-                  entry: category
-                });
-              }
-            });
+        });
+      },
 
-          } else {
-            // Inform user of error
-            res.json({
+      // Retrieve all categories
+      all: function(req, res) {
+        // Get all entries in the categories model
+        Categories.find({}, function(error, categories) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
               success: false,
-              message: 'Category does not exist',
+              message: 'There was an error reading from the database'
             });
           }
-        }
-      });
+          // Success, return retrieved categories with success message
+          return res.json({
+            success: true,
+            message: 'Categories retrieved',
+            entry: categories
+          });
+        });
+      }
     },
-    deleteCategory: function(req, res) {
-      // Delete entry with provided id
-      Categories.findByIdAndRemove(req.params.id, function(error, category) {
+
+    // Update user by ID
+    update: function(req, res) {
+      // Get the category to update
+      Categories.findById(req.params.id, function(error, category) {
+        // Inform user of errors with the database
         if (error) {
-          res.status(500).json({
+          return res.status(500).json({
             success: false,
             message: 'There was an error reading from the database'
           });
-        } else {
-          if (category) {
-            res.json({
-              success: true,
-              message: 'Category deleted successfully'
-            });
-          } else {
-            res.json({
-              success: false,
-              message: 'Category does not exist'
-            });
-          }
         }
+        // Category found, update it
+        if (category) {
+          // For each property sent in the body
+          Object.keys(req.body).forEach(function(property) {
+            // Update the document
+            category[property] = req.body[property];
+
+          });
+          // Save the updated category
+          category.save(function(error) {
+            // Parse any error and pass on to user
+            if (error) {
+              return parseError(res, error);
+            }
+            // Category updated, return success message
+            return res.json({
+              success: true,
+              message: 'Category created successfully',
+              entry: category
+            });
+          });
+        }
+        // Failed, no document with specified ID
+        return res.json({
+          success: false,
+          message: 'Category does not exist',
+        });
+      });
+    },
+
+    // Delete specified category
+    destroy: function(req, res) {
+      // Find category to delete
+      Categories.findByIdAndRemove(req.params.id, function(error, category) {
+        // Inform user of errors with the database
+        if (error) {
+          return res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
+        }
+        // Category deleted, return success message
+        if (category) {
+          return res.json({
+            success: true,
+            message: 'Category deleted successfully'
+          });
+        }
+        // Failed, no document with specified ID
+        return res.json({
+          success: false,
+          message: 'Category does not exist',
+        });
       });
     }
   };

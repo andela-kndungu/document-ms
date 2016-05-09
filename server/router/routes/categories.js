@@ -4,20 +4,20 @@
   var router = require('express').Router();
   var CategoriesController = require('../../controllers/categories');
 
-  // e.g. GET localhost:8080/categories
-  router.get('/', CategoriesController.getAll);
+  // Create a category (POST localhost:8080/categories)
+  router.post('/', CategoriesController.create);
 
-  // e.g. POST localhost:8080/categories
-  router.post('/', CategoriesController.addCategory);
+  // Fetch category by ID (GET localhost:8080/categories/id)
+  router.get('/:id', CategoriesController.find.id);
 
-  // e.g. GET localhost:8080/categories/13
-  router.get('/:id', CategoriesController.getCategory);
+  // Fetch all categories (GET localhost:8080/categories)
+  router.get('/', CategoriesController.find.all);
 
-  // e.g. PUT localhost:8080/documents/13
-  router.put('/:id', CategoriesController.updateCategory);
+  // Update category by ID (PUT localhost:8080/cateogries/id)
+  router.put('/:id', CategoriesController.update);
 
-  // e.g. DELETE localhost:8080/documents/13
-  router.delete('/:id', CategoriesController.deleteCategory);
+  // Delete category by id (DELETE localhost:8080/documents/id)
+  router.delete('/:id', CategoriesController.destroy);
 
   module.exports = router;
 })();

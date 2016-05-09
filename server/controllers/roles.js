@@ -5,121 +5,151 @@
   var parseError = require('./parseError');
 
   module.exports = {
-    getAll: function(req, res) {
-      // Get all entries in the roles "table"
-      Roles.find({}, function(error, roles) {
-        //  Inform user if anything goes wrong
-        if (error) {
-          res.status(500);
-          res.send('There was an error reading from the database');
-        } else {
-          // Else all's good, send results
-          res.json(roles);
-        }
-      });
-    },
-    addRole: function(req, res) {
-      // Declare new instance of the Role "table"
+    // Add a new role
+    create: function(req, res) {
+      // Declare new instance of the Roles model
       var role = new Roles();
 
-      // Define values of the new "row" to add
+      // Define values of the new object to add
       role.title = req.body.title;
 
+      // Save the new role parsing the error if request is invalid
       role.save(function(error) {
         if (error) {
-          parseError(res, error);
-        } else {
-          // Return send success message
-          res.json({
-            success: true,
-            message: 'Role created successfully'
-          });
+          return parseError(res, error);
         }
+
+        // Role created, return success message
+        return res.json({
+          success: true,
+          message: 'Role created successfully',
+          entry: role
+        });
       });
     },
-    getRole: function(req, res) {
-      // Get the category based on provided id
-      Roles.findById(req.params.id, function(error, role) {
-        if (error) {
-          res.status(500).json({
-            success: false,
-            message: 'There was an error reading from the database'
-          });
-        } else {
+
+    // Handle all get requests for categories
+    find: {
+      // Retrieve by ID
+      id: function(req, res) {
+        Roles.findById(req.params.id, function(error, role) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
+              success: false,
+              message: 'There was an error reading from the database'
+            });
+          }
+
+          // Success, return retrieved role with success message
           if (role) {
-            res.json({
+            return res.json({
               success: true,
-              message: 'Category retrieved',
+              message: 'Role retrieved',
               entry: role
             });
-          } else {
-            res.json({
-              success: false,
-              message: 'Category does not exist',
-            });
           }
-        }
-      });
-    },
-    updateRole: function(req, res) {
-      // Get the category based on provided id
-      Roles.findById(req.params.id, function(error, role) {
-        if (error) {
-          res.status(500).json({
-            success: false,
-            message: 'There was an error reading from the database'
-          });
-        } else {
-          if (role) {
-            Object.keys(req.body).forEach(function(property) {
-              role[property] = req.body[property];
-            });
-            // Save the updated category
-            role.save(function(error) {
-              // If error occured inform user
-              if (error) {
-                parseError(res, error);
-              } else {
-                // Return successfully updated role
-                res.json({
-                  success: true,
-                  message: 'Role updated successfully',
-                  entry: role
-                });
-              }
-            });
 
-          } else {
-            // Inform user of error
-            res.json({
+          // Failed, no role with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'Role does not exist',
+          });
+        });
+      },
+
+      // Retrieve all roles
+      all: function(req, res) {
+        // Get all entries in the roles model
+        Roles.find({}, function(error, roles) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
               success: false,
-              message: 'Role does not exist',
+              message: 'There was an error reading from the database'
             });
           }
-        }
-      });
+
+          // Success, return retrieved roles with success message
+          return res.json({
+            success: true,
+            message: 'Roles retrieved',
+            entry: roles
+          });
+        });
+      }
     },
-    deleteRole: function(req, res) {
-      // Delete entry with provided id
-      Roles.findByIdAndRemove(req.params.id, function(error, role) {
+
+    // Update role by ID
+    update: function(req, res) {
+      // Get the role to update
+      Roles.findById(req.params.id, function(error, role) {
+        // Inform user of errors with the database
         if (error) {
-          res.status(500).json({
+          return res.status(500).json({
             success: false,
             message: 'There was an error reading from the database'
           });
-        } else {
-          if (role) {
-            res.json({
-              success: true,
-              message: 'Category deleted successfully'
-            });
-          } else {
-            res.json({
-              success: false,
-              message: 'Category does not exist'
-            });
-          }
         }
+
+        // Role found, update it
+        if (role) {
+          // For each property sent in the body
+          Object.keys(req.body).forEach(function(property) {
+            // Update the role
+            role[property] = req.body[property];
+
+          });
+
+          // Save the updated role
+          role.save(function(error) {
+            // Parse any error and pass on to user
+            if (error) {
+              return parseError(res, error);
+            }
+
+            // Role updated, return success message
+            return res.json({
+              success: true,
+              message: 'Role created successfully',
+              entry: role
+            });
+          });
+        }
+
+        // Failed, no role with specified ID
+        return res.status(404).json({
+          success: false,
+          message: 'Role does not exist',
+        });
+      });
+    },
+
+    // Delete specified category
+    destroy: function(req, res) {
+      // Find role to delete
+      Roles.findByIdAndRemove(req.params.id, function(error, role) {
+        // Inform user of errors with the database
+        if (error) {
+          return res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
+        }
+
+        // Role deleted, return success message
+        if (role) {
+          return res.json({
+            success: true,
+            message: 'Role deleted successfully'
+          });
+        }
+
+        // Failed, no role with specified ID
+        return res.json({
+          success: false,
+          message: 'Role does not exist',
+        });
       });
     }
   };

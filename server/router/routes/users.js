@@ -4,20 +4,23 @@
   var router = require('express').Router();
   var UsersController = require('../../controllers/users');
 
-  // e.g. GET localhost:8080/users
-  router.get('/', UsersController.getAll);
+  // Create a user (POST localhost:8080/users)
+  router.post('/', UsersController.create);
 
-  // e.g. GET localhost:8080/users/13/documents
-  router.get('/:id/documents', UsersController.getDocumentsById);
+  // Fetch user by ID (GET localhost:8080/users/id)
+  router.get('/:id', UsersController.find.id);
 
-  // e.g. GET localhost:8080/users/13
-  router.get('/:id', UsersController.getUser);
+  // Fetch all users (GET localhost:8080/users)
+  router.get('/', UsersController.find.all);
 
-  // e.g. PUT localhost:8080/users/13
-  router.put('/:id', UsersController.updateUser);
+  // Update user by ID (PUT localhost:8080/users/id)
+  router.put('/:id', UsersController.update);
 
-  // e.g. DELETE localhost:8080/users/13
-  router.delete('/:id', UsersController.deleteUser);
+  // Delete user by id (DELETE localhost:8080/users/id)
+  router.delete('/:id', UsersController.destroy);
+
+  // Fetch a user's documents (GET localhost:8080/users/id/documents)
+  router.get('/:id/documents', UsersController.find.documents);
 
   module.exports = router;
 })();

@@ -18,6 +18,7 @@
         if (error) {
           return parseError(res, error);
         }
+
         // Category created, return success message
         return res.json({
           success: true,
@@ -39,6 +40,7 @@
               message: 'There was an error reading from the database'
             });
           }
+
           // Success, return retrieved category with success message
           if (category) {
             return res.json({
@@ -47,8 +49,9 @@
               entry: category
             });
           }
-          // Failed, no document with specified ID
-          return res.json({
+
+          // Failed, no category with specified ID
+          return res.status(404).json({
             success: false,
             message: 'Category does not exist',
           });
@@ -66,6 +69,7 @@
               message: 'There was an error reading from the database'
             });
           }
+          
           // Success, return retrieved categories with success message
           return res.json({
             success: true,
@@ -76,7 +80,7 @@
       }
     },
 
-    // Update user by ID
+    // Update category by ID
     update: function(req, res) {
       // Get the category to update
       Categories.findById(req.params.id, function(error, category) {
@@ -87,20 +91,23 @@
             message: 'There was an error reading from the database'
           });
         }
+
         // Category found, update it
         if (category) {
           // For each property sent in the body
           Object.keys(req.body).forEach(function(property) {
-            // Update the document
+            // Update the category
             category[property] = req.body[property];
 
           });
+
           // Save the updated category
           category.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
               return parseError(res, error);
             }
+
             // Category updated, return success message
             return res.json({
               success: true,
@@ -109,8 +116,9 @@
             });
           });
         }
+
         // Failed, no document with specified ID
-        return res.json({
+        return res.status(404).json({
           success: false,
           message: 'Category does not exist',
         });
@@ -128,6 +136,7 @@
             message: 'There was an error reading from the database'
           });
         }
+
         // Category deleted, return success message
         if (category) {
           return res.json({
@@ -135,6 +144,7 @@
             message: 'Category deleted successfully'
           });
         }
+
         // Failed, no document with specified ID
         return res.json({
           success: false,

@@ -5,7 +5,7 @@
 
 ![Quiz app icon](https://cloud.githubusercontent.com/assets/17295379/15103681/de0b7cb8-15b6-11e6-8d3e-1ae4500763c9.png)
 
-Andela's Javascript curiculum third checkpoint.
+Andela's Javascript curriculum third checkpoint.
 
 ## Accessing the API the easy way
 Navigate to `http://ennovate.xyz` on your browser
@@ -18,7 +18,7 @@ Navigate to `http://ennovate.xyz` on your browser
 Follow the instructions at `https://git-scm.com/book/en/v2/Getting-Started-Installing-Git` to install `git` which is required to clone the repository.
 
 ####Installing `node`
-1. Visit `https://nodejs.org/` and follow the insructions provided to install `node`.
+1. Visit `https://nodejs.org/` and follow the instructions provided to install `node`.
 2. Follow the instructions at `https://docs.npmjs.com/getting-started/fixing-npm-permissions` to be able to install `npm` packages globally without providing the root password.
 
 #### Installing Mongo

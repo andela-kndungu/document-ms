@@ -4,20 +4,20 @@
   var router = require('express').Router();
   var RolesController = require('../../controllers/roles');
 
-  // e.g. GET localhost:8080/roles
-  router.get('/', RolesController.getAll);
+  // Create a role (POST localhost:8080/roles)
+  router.post('/', RolesController.create);
 
-  // e.g. POST localhost:8080/roles
-  router.post('/', RolesController.addRole);
+  // Fetch role by ID (GET localhost:8080/roles/id)
+  router.get('/:id', RolesController.find.id);
 
-  // e.g. GET localhost:8080/roles/13
-  router.get('/:id', RolesController.getRole);
+  // Fetch all roles (GET localhost:8080/roles)
+  router.get('/', RolesController.find.all);
 
-  // e.g. PUT localhost:8080/documents/13
-  router.put('/:id', RolesController.updateRole);
+  // Update role by ID (PUT localhost:8080/roles/id)
+  router.put('/:id', RolesController.update);
 
-  // e.g. DELETE localhost:8080/documents/13
-  router.delete('/:id', RolesController.deleteRole);
+  // Delete role by id (DELETE localhost:8080/roles/id)
+  router.delete('/:id', RolesController.destroy);
 
   module.exports = router;
 })();

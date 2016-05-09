@@ -28,7 +28,7 @@
       });
     },
 
-    // Handle all get requests for categories
+    // Handle all get requests for roles
     find: {
       // Retrieve by ID
       id: function(req, res) {

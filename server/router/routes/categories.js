@@ -16,7 +16,7 @@
   // Update category by ID (PUT localhost:8080/cateogries/id)
   router.put('/:id', CategoriesController.update);
 
-  // Delete category by id (DELETE localhost:8080/documents/id)
+  // Delete category by id (DELETE localhost:8080/cateogries/id)
   router.delete('/:id', CategoriesController.destroy);
 
   module.exports = router;

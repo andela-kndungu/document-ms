@@ -9,13 +9,14 @@
   var express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
-    bodyParser = require('body-parser'),
     router = require('./server/router'),
     app = express(),
-    port = process.env.PORT || 3000,
-    databaseUri = process.env.DATABASE_URI,
-    db = mongoose.connect(databaseUri),
-    dbConnection = mongoose.connection;
+    port = process.env.PORT,
+    databaseUri = process.env.DATABASE_URI;
+
+  // Connect to the database and get the connection
+  mongoose.connect(databaseUri);
+  var dbConnection = mongoose.connection;
 
   // Provide feedback
   dbConnection.on('error', function(error) {
@@ -25,7 +26,7 @@
     console.log('Successfully connected to db');
   });
 
-  // Set up bodyParser
+  // Set up bodyParser to get passed parameters and post bodies
   app.use(bodyParser.urlencoded({
     extended: true
   }));

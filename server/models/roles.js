@@ -4,7 +4,6 @@
   var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
-  // Define a "Table"
   var RoleSchema = new Schema({
     title: {
       type: String,

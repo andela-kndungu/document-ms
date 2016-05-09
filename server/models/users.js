@@ -7,13 +7,13 @@
   var Roles = require('../models/roles');
 
 
-  // Define a "Table"
   var UserSchema = new Schema({
     username: {
       type: String,
       required: [true, 'A username must be provided'],
       unique: true
     },
+
     name: {
       first: {
         type: String,
@@ -24,15 +24,18 @@
         required: [true, 'A last name must be provided']
       }
     },
+
     email: {
       type: String,
       required: [true, 'An email must be provided'],
       unique: true
     },
+
     password: {
       type: String,
       required: [true, 'A password must be provided']
     },
+
     role: {
       type: String,
       required: [true, 'A role must be provided'],
@@ -70,7 +73,6 @@
     });
   };
 
-  // Before saving hash the plain text password
   UserSchema.pre('save', function(next) {
     // To be able to access the user object from within the bcrypt function
     var user = this;

@@ -6,7 +6,6 @@
   var Users = require('../models/users');
   var Categories = require('../models/categories');
 
-  // Define a "Table"
   var DocumentsSchema = new Schema({
     owner_id: {
       type: String,

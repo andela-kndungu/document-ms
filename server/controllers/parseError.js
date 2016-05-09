@@ -2,9 +2,8 @@
   'use strict';
 
   module.exports = function(res, error) {
-
-    // Descrptive message of the failure to be sent to user
-    var errorMessage;
+    // Descrptive message of the error and http status code
+    var errorMessage, status;
 
     /* Sample saveError object
     {
@@ -37,10 +36,11 @@
     {
       code: 11000,
       index: 0,
-      errmsg: 'E11000 duplicate key error collection: document-ms.users index: username_1 dup key: { : "newuser" }',
+      errmsg: 'E11000 duplicate key error collection: document-ms.users
+      index: username_1 dup key: { : "newuser" }',
       op: {
         role: 'user',
-        password: '$2a$10$YZswFk9px8brimtQd5OaO.65otE6TE.vYJ0DCW7LVGxs2jYFt30l2',
+        password: '$2a$10$YZswFk9px8brimQd5OaO.65otE6TE.vYJ0DCW7LVGxs2jYFt30l2',
         email: 'new@user.com',
         username: 'newuser',
         _id: '572a7a4153c50f810dc37d8b',
@@ -57,18 +57,21 @@
       var failedValidations = Object.keys(error.errors);
       var firstFailed = failedValidations[0];
 
-      // Get validation error message
+      // Get validation error message and set status to invalid request
       errorMessage = error.errors[firstFailed].message;
-      res.status(400);
+      status = 400;
     } else if (error.code === 11000) {
-      res.status(409);
-      // Handle unexpected errors
+      // Set status to conflict
+      status = 409;
+
+      // This error is due to duplicate values in a field defined unique
       errorMessage = 'Duplicate key error';
     } else {
+      status = 500;
       errorMessage = error;
-      // Done, send to user
     }
-    res.send({
+    // Done, send to user
+    return res.status(status).send({
       success: false,
       message: errorMessage
     });

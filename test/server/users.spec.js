@@ -14,24 +14,23 @@
         if (error) {
           throw (error);
         } else {
-          // loginHelper.admin(function(error, res) {
-          //   if (error) {
-          //     throw error;
-          //   } else {
-          //     adminToken = res.body.token;
-          //     adminId = res.body.entry._id;
-          //     loginHelper.user(function(error, res) {
-          //       if (error) {
-          //         throw error;
-          //       } else {
-          //         userToken = res.body.token;
-          //         userId = res.body.entry._id;
-          //       }
-          //       done();
-          //     });
-          //   }
-          // });
-          done();
+          loginHelper.admin(function(error, res) {
+            if (error) {
+              throw error;
+            } else {
+              adminToken = res.body.token;
+              adminId = res.body.entry._id;
+              loginHelper.user(function(error, res) {
+                if (error) {
+                  throw error;
+                } else {
+                  userToken = res.body.token;
+                  userId = res.body.entry._id;
+                }
+                done();
+              });
+            }
+          });
         }
       });
     });

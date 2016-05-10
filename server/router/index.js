@@ -5,8 +5,7 @@
    usersRoutes = require('./routes/users'),
    rolesRoutes = require('./routes/roles'),
    categoriesRoutes = require('./routes/categories'),
-   documentsRoutes = require('./routes/documents'),
-   searchRoutes = require('./routes/search');
+   documentsRoutes = require('./routes/documents');
 
   // Authentication Middleware
   var authenticate = require('../controllers/authenticate');
@@ -21,6 +20,5 @@
     app.use('/roles', rolesRoutes);
     app.use('/categories', categoriesRoutes);
     app.use('/documents', documentsRoutes);
-    app.use('/search', searchRoutes);
   };
 })();

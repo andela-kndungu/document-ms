@@ -6,6 +6,7 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
+  var Users = require('../../server/models/users');
   var adminToken, adminId, userToken, userId;
 
   describe('Users', function() {
@@ -76,6 +77,26 @@
             should.not.exist(res.body.entry);
             done();
           });
+      });
+      it('returns empty array when there are no users', function(done) {
+        // Delete all users
+        Users.remove({}, function(error) {
+          if (!error) {
+            request(app)
+              .get('/users')
+              .set('x-access-token', adminToken)
+              .set('Accept', 'application/json')
+              .end(function(error, res) {
+                (res.status).should.equal(200);
+                should.not.exist(error);
+                (res.body.success).should.equal(true);
+                (res.body.message).should.containEql('Users retrieved');
+                (res.body.entry).should.be.an.Array;
+                should(res.body.entry.length).not.be.greaterThan(0);
+                done();
+              });
+          }
+        });
       });
     });
     // describe('Creates a new user (POST /users/)', function() {

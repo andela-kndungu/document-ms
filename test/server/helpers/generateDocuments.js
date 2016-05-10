@@ -32,8 +32,6 @@
     return generatedDocuments;
   };
 
-
-
   module.exports = function(callback) {
     Users.find().exec(function(error, users) {
         if (error) {

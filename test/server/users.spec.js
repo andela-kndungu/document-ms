@@ -276,22 +276,36 @@
           });
       });
     });
-    // describe('All user\'s documents (GET /users/<id>/documents)', function() {
-    //   it('responds with an array of all the user\'s documents', function(done) {
-    //     request(app)
-    //       .get('/users/' + adminId + '/documents')
-    //       .set('x-access-token', adminToken)
-    //       .set('Accept', 'application/json')
-    //       .end(function(error, res) {
-    //         should.not.exist(error);
-    //         res.status.should.equal(200);
-    //         res.body.should.be.an.Array;
-    //         should(res.body.length).be.greaterThan(0);
-    //         (res.body[0].owner_id).should.equal(adminId);
-    //         done();
-    //       });
-    //   });
-    // });
+    describe('All user\'s documents (GET /users/<id>/documents)', function() {
+      it('responds with an array of all the user\'s documents', function(done) {
+        request(app)
+          .get('/users/' + adminId + '/documents')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.greaterThan(0);
+            (res.body.entry[0].owner_id).should.equal(adminId);
+            done();
+          });
+      });
+
+      it('responds with an empty array for non existent user', function(done) {
+        request(app)
+          .get('/users/' + '123' + '/documents')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).not.be.greaterThan(0);
+            done();
+          });
+      });
+    });
     // describe('Returns a user based on ID (GET /users/<id>)', function() {
     //   it('returns expected user', function(done) {
     //     request(app)

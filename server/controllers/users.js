@@ -102,7 +102,7 @@
           // Success, return retrieved documents with success message
           return res.json({
             success: true,
-            message: 'Categories retrieved',
+            message: 'Documents retrieved',
             entry: documents
           });
 

@@ -52,7 +52,7 @@
           if (user) {
             return res.json({
               success: true,
-              message: 'Category retrieved',
+              message: 'User retrieved',
               entry: user
             });
           }
@@ -60,7 +60,7 @@
           // Failed, no user with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Category does not exist',
+            message: 'User does not exist',
           });
         });
       },

@@ -35,6 +35,22 @@
         }
       });
     });
+    describe('Returns a user based on ID (GET /users/<id>)', function() {
+      it('returns expected user', function(done) {
+        request(app)
+          .get('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('User retrieved');
+            (res.body.entry.username).should.equal('user');
+            done();
+          });
+      });
+    });
     describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {
         request(app)
@@ -300,26 +316,15 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('Documents retrieved');
             (res.body.entry).should.be.an.Array;
             should(res.body.entry.length).not.be.greaterThan(0);
             done();
           });
       });
     });
-    // describe('Returns a user based on ID (GET /users/<id>)', function() {
-    //   it('returns expected user', function(done) {
-    //     request(app)
-    //       .get('/users/' + userId)
-    //       .set('x-access-token', adminToken)
-    //       .set('Accept', 'application/json')
-    //       .end(function(error, res) {
-    //         should.not.exist(error);
-    //         res.status.should.equal(200);
-    //         (res.body.entry.username).should.equal('user');
-    //         done();
-    //       });
-    //   });
-    // });
+
     // describe('Logs in a user (POST /users/login)', function() {
     //   it('logs in user and returns expected user details', function(done) {
     //     request(app)

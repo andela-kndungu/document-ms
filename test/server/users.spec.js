@@ -50,6 +50,19 @@
             done();
           });
       });
+      it('returns server', function(done) {
+        request(app)
+          .get('/users/' + 'string')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('from the database');
+            done();
+          });
+      });
     });
     describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {

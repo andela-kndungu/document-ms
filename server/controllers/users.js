@@ -114,7 +114,6 @@
     update: function(req, res) {
       // Get the user to update
       Users.findById(req.params.id, function(error, user) {
-        console.log('The id isdfghjdfghfghdfghfgh '  + req.params.id);
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({

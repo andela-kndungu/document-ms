@@ -182,6 +182,7 @@
       });
     },
     search: function(req, res) {
+      console.log('THE PARAMETER PASSED IS ');
       // Using query builder
       var query = Documents.find();
 

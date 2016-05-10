@@ -114,6 +114,7 @@
     update: function(req, res) {
       // Get the user to update
       Users.findById(req.params.id, function(error, user) {
+        console.log('The id isdfghjdfghfghdfghfgh '  + req.params.id);
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -144,7 +145,7 @@
             // Category updated, return success message
             return res.json({
               success: true,
-              message: 'Category created successfully',
+              message: 'User updated successfully',
               entry: user
             });
 
@@ -154,7 +155,7 @@
         // Failed, no document with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Category does not exist',
+          message: 'User does not exist',
         });
       });
     },

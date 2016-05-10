@@ -35,35 +35,32 @@
         }
       });
     });
-    describe('Returns a user based on ID (GET /users/<id>)', function() {
-      it('returns expected user', function(done) {
+
+    describe('Updates a user (PUT /users/:id)', function() {
+      xit('updates user details and returns new details', function(done) {
         request(app)
-          .get('/users/' + userId)
+          .put('/users/' + userId)
+          .send({
+            email: 'anew@email.com',
+            username: 'anewuser',
+            firstName: 'NewName',
+            lastName: 'User',
+          })
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
+            console.log(res.body);
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('User retrieved');
-            (res.body.entry.username).should.equal('user');
-            done();
-          });
-      });
-      it('returns server', function(done) {
-        request(app)
-          .get('/users/' + 'string')
-          .set('x-access-token', adminToken)
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            res.status.should.equal(500);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('from the database');
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('User updated successfully');
+            (res.body.entry.username).should.containEql('anewuser');
+            (res.body.entry.name.first).should.containEql('NewName');
             done();
           });
       });
     });
+
     describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {
         request(app)
@@ -107,7 +104,7 @@
             done();
           });
       });
-      it('returns empty array when there are no users', function(done) {
+      xit('returns empty array when there are no users', function(done) {
         // Delete all users
         Users.remove({}, function(error) {
           if (!error) {
@@ -128,6 +125,37 @@
         });
       });
     });
+
+    describe('Returns a user based on ID (GET /users/<id>)', function() {
+      xit('returns expected user', function(done) {
+        request(app)
+          .get('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('User retrieved');
+            (res.body.entry.username).should.equal('user');
+            done();
+          });
+      });
+      it('returns server', function(done) {
+        request(app)
+          .get('/users/' + 'string')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('from the database');
+            done();
+          });
+      });
+    });
+
     describe('Creates a new user (POST /users/)', function() {
       it('successfully creates a new user', function(done) {
         request(app)
@@ -338,62 +366,62 @@
       });
     });
 
-    // describe('Logs in a user (POST /users/login)', function() {
-    //   it('logs in user and returns expected user details', function(done) {
-    //     request(app)
-    //       .post('/users/login/')
-    //       .send({
-    //         username: 'newuser',
-    //         password: 'newPass'
-    //       })
-    //       .set('x-access-token', adminToken)
-    //       .set('Accept', 'application/json')
-    //       .end(function(error, res) {
-    //         should.not.exist(error);
-    //         res.status.should.equal(200);
-    //         should.exist(res.body.token);
-    //         (res.body.entry.username).should.equal('newuser');
-    //         done();
-    //       });
-    //   });
-    // });
-    // describe('Updates a user (PUT /users/:id)', function() {
-    //   it('updates user details and returns new details', function(done) {
-    //     request(app)
-    //       .put('/users/' + userId)
-    //       .send({
-    //         email: 'anew@email.com',
-    //         username: 'anewuser',
-    //         firstName: 'NewName',
-    //         lastName: 'User',
-    //       })
-    //       .set('x-access-token', adminToken)
-    //       .set('Accept', 'application/json')
-    //       .end(function(error, res) {
-    //         should.not.exist(error);
-    //         res.status.should.equal(200);
-    //         res.body.success.should.equal(true);
-    //         (res.body.message).should.containEql('User updated successfully');
-    //         (res.body.entry.username).should.containEql('anewuser');
-    //         (res.body.entry.name.first).should.containEql('NewName');
-    //         done();
-    //       });
-    //   });
-    // });
-    // describe('Deletes a user (DELETE /users/:id)', function() {
-    //   it('deletes a user', function(done) {
-    //     request(app)
-    //       .delete('/users/' + userId)
-    //       .set('x-access-token', adminToken)
-    //       .set('Accept', 'application/json')
-    //       .end(function(error, res) {
-    //         should.not.exist(error);
-    //         res.status.should.equal(200);
-    //         res.body.success.should.equal(true);
-    //         (res.body.message).should.containEql('User deleted successfully');
-    //         done();
-    //       });
-    //   });
-    // });
+    describe('Logs in a user (POST /users/login)', function() {
+      it('logs in user and returns expected user details', function(done) {
+        request(app)
+          .post('/users/login/')
+          .send({
+            username: 'newuser',
+            password: 'newPass'
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('successfully been logged in');
+            should.exist(res.body.token);
+            (res.body.entry.username).should.equal('newuser');
+            done();
+          });
+      });
+
+      it('returns error message when given non existent user', function(done) {
+        request(app)
+          .post('/users/login/')
+          .send({
+            username: 'newuser12',
+            password: 'newPass'
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('User does not exist');
+            done();
+          });
+      });
+    });
+
+
+    describe('Deletes a user (DELETE /users/:id)', function() {
+      it('deletes a user', function(done) {
+        request(app)
+          .delete('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('User deleted successfully');
+            done();
+          });
+      });
+    });
+
   });
 })();

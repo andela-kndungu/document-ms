@@ -41,9 +41,39 @@
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
+            (res.status).should.equal(200);
             should.not.exist(error);
-            res.body.should.be.an.Array;
-            should(res.body.length).be.exactly(2);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('Users retrieved');
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.exactly(2);
+            done();
+          });
+      });
+      it('returns error when invalid token is provided', function(done) {
+        request(app)
+          .get('/users')
+          .set('x-access-token', adminToken + 'toCorruptToken')
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            (res.status).should.equal(401);
+            should.not.exist(error);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Failed to authenticate');
+            should.not.exist(res.body.entry);
+            done();
+          });
+      });
+      it('returns error when no token is provided', function(done) {
+        request(app)
+          .get('/users')
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            (res.status).should.equal(401);
+            should.not.exist(error);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('No token provided');
+            should.not.exist(res.body.entry);
             done();
           });
       });

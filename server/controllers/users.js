@@ -80,7 +80,7 @@
           // Success, return retrieved categories with success message
           return res.json({
             success: true,
-            message: 'Categories retrieved',
+            message: 'Users retrieved',
             entry: users
           });
         });
@@ -203,7 +203,7 @@
         if (!user) {
           return res.status(404).json({
             success: false,
-            message: 'Category does not exist',
+            message: 'User does not exist',
           });
         }
 
